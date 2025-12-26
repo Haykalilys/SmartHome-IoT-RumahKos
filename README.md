@@ -1,153 +1,103 @@
-# SmartHome-IoT-RumahKos
-# Proyek Akhir Komunikasi Antar Perangkat – Smart Home IoT
+# Smart Home IoT Rumah Kos Berbasis MQTT
 
-## 1. Judul & Ringkasan Sistem
+## Deskripsi Proyek
+Proyek ini merupakan implementasi sistem **Smart Home berbasis Internet of Things (IoT)** untuk monitoring dan pengendalian perangkat listrik pada rumah kos. Sistem dirancang untuk mensimulasikan pengelolaan beberapa perangkat seperti lampu kamar, mesin cuci, dan pompa air menggunakan **ESP32** yang disimulasikan melalui **Wokwi Simulator**.
 
-Smart Home IoT untuk Monitoring dan Kontrol Rumah Kos 3 Kamar Berbasis MQTT
-
-Sistem ini dirancang untuk membantu pemilik rumah kos memantau dan mengontrol penggunaan listrik pada rumah kos 3 kamar secara jarak jauh tanpa menggunakan kamera. Sistem mampu memonitor status lampu di setiap kamar, penggunaan mesin cuci, serta pompa air, dan memungkinkan pengendalian mesin cuci serta pompa air melalui dashboard web berbasis IoT menggunakan protokol MQTT.
+Komunikasi data antara perangkat dan dashboard dilakukan menggunakan protokol **MQTT** dengan bantuan **broker publik HiveMQ**. Dashboard web dikembangkan menggunakan **HTML dan JavaScript** dan dijalankan melalui browser menggunakan Visual Studio Code.
 
 ---
 
-## 2. Hardware dan Software yang Digunakan
-
-### Hardware
-
-* ESP32 (3 unit)
-* Sensor Arus ACS712 / PZEM-004T
-* Relay 2 Channel
-* Lampu AC
-* Mesin Cuci
-* Pompa Air
-* Router WiFi
-* Kabel jumper dan breadboard
-
-### Software / Tools
-
-* Arduino IDE
-* MQTT Broker (Mosquitto / HiveMQ)
-* Node-RED Dashboard
-* GitHub
-* Fritzing / Draw.io
+## Tujuan
+- Menerapkan konsep Internet of Things (IoT)
+- Menggunakan protokol MQTT untuk komunikasi data
+- Membangun dashboard web untuk monitoring dan kontrol perangkat
+- Mensimulasikan sistem Smart Home tanpa perangkat keras fisik
 
 ---
 
-## 3. Gambar Rangkaian (Wiring Diagram)
+## Arsitektur Sistem
+Diagram arsitektur sistem menunjukkan hubungan antara dashboard web, MQTT broker, dan ESP32.
 
-**Deskripsi:**
+![Arsitektur Sistem](diagrams/arsitektur.png)
 
-* Sensor arus terhubung ke pin ADC ESP32
-* Relay terhubung ke pin digital ESP32
-* ESP32 terhubung ke WiFi Router
-
-*(Lampirkan gambar wiring_diagram.png di folder hardware/)*
-
----
-
-## 4. Arsitektur Aplikasi dan Jaringan
-
-### Diagram Arsitektur
-
-```
-[Lampu]     [Mesin Cuci]     [Pompa]
-   |             |             |
-[Sensor]      [Relay]       [Relay]
-      \        |        /
-           [ ESP32 ]
-                |
-              WiFi
-                |
-          [ MQTT Broker ]
-                |
-          [ Dashboard Web ]
-
-```
-
-*(Lampirkan gambar architecture.png di folder arsitektur/)*
+### Penjelasan Arsitektur:
+1. **Dashboard Web**  
+   Berfungsi sebagai antarmuka pengguna untuk memantau status perangkat dan mengirim perintah ON/OFF.
+2. **MQTT Broker (HiveMQ)**  
+   Bertindak sebagai perantara komunikasi antara dashboard dan ESP32.
+3. **ESP32 (Wokwi Simulator)**  
+   Mengontrol perangkat (LED sebagai simulasi) dan mengirimkan status ke broker MQTT.
 
 ---
 
-## 5. Topik dan Payload MQTT
+## Diagram Wiring
+Diagram wiring berikut menunjukkan koneksi antar komponen pada simulasi ESP32 di Wokwi.
 
-### Topic
+![Wiring Diagram](diagrams/wiring.png)
 
-* rumah_kos/kamar1/lampu/status
-* rumah_kos/kamar2/lampu/status
-* rumah_kos/kamar3/lampu/status
-* rumah_kos/mesincuci/status
-* rumah_kos/mesincuci/kontrol
-* rumah_kos/pompa/status
-* rumah_kos/pompa/kontrol
-
-### Payload Status
-
-```json
-{
-  "status": "ON",
-  "arus": 0.45
-}
-```
-
-### Payload Kontrol
-
-```json
-{
-  "perintah": "OFF"
-}
-```
+### Keterangan Wiring:
+- GPIO 2  → LED Kuning (Lampu Kamar)
+- GPIO 4  → LED Merah (Mesin Cuci)
+- GPIO 5  → LED Biru (Pompa Air)
+- GPIO 34 → Potentiometer (Sensor cahaya)
+- 3V3 & GND → Catu daya komponen
 
 ---
 
-## 6. Cara Instalasi Sistem
-
-1. Install Arduino IDE
-2. Tambahkan board ESP32
-3. Install library WiFi dan PubSubClient
-4. Setup MQTT Broker
-5. Upload kode ke ESP32
-6. Import flow Node-RED
-
----
-
-## 7. Cara Pengoperasian dan Pengujian
-
-### Pengoperasian
-
-* Akses dashboard web
-* Pantau status perangkat
-* Tekan tombol ON/OFF untuk mesin cuci dan pompa
-
-### Pengujian
-
-| No | Pengujian      | Hasil            |
-| -- | -------------- | ---------------- |
-| 1  | Lampu menyala  | Status ON tampil |
-| 2  | Mesin cuci OFF | Relay mati       |
-| 3  | Pompa ON       | Relay aktif      |
+## Teknologi yang Digunakan
+- **ESP32** (Simulasi Wokwi)
+- **MQTT Protocol**
+- **HiveMQ Public Broker**
+- **HTML, CSS, JavaScript**
+- **MQTT.js**
+- **Visual Studio Code**
 
 ---
 
-## 8. Contoh Hasil Pengoperasian dan Pengujian
+## Topik dan Payload MQTT
+Detail topik MQTT yang digunakan dalam sistem ini dapat dilihat pada file berikut:
 
-### a. Foto Perangkat
+📁 `mqtt/topic_payload.md`
 
-*(Lampirkan foto perangkat di folder testing/)*
-
-### b. Tangkapan Layar Dashboard
-
-*(Lampirkan screenshot dashboard di folder dashboard/)*
-
----
-
-## 9. Pembagian Tugas Kelompok
-
-* Anggota 1: Hardware & Wiring
-* Anggota 2: MQTT & ESP32
-* Anggota 3: Dashboard & Dokumentasi
+Ringkasan topik:
+- `rumah_kos/kamar1/lampu/status` → Status lampu (ON / OFF)
+- `rumah_kos/mesincuci/kontrol` → Kontrol mesin cuci (ON / OFF)
+- `rumah_kos/pompa/kontrol` → Kontrol pompa air (ON / OFF)
 
 ---
 
-## 10. Penutup
+## Dashboard Web
+Dashboard web digunakan untuk:
+- Menampilkan status lampu kamar
+- Mengontrol mesin cuci dan pompa air secara real-time
 
-Sistem Smart Home IoT ini berhasil memenuhi kebutuhan pemantauan dan pengendalian perangkat listrik rumah kos secara jarak jauh dengan aman dan efisien menggunakan protokol MQTT.
+![Dashboard Web](screenshots/dashboard_on.png)
+
+Dashboard dibuat menggunakan **HTML dan JavaScript**, serta menggunakan library **MQTT.js** untuk terhubung ke MQTT broker melalui WebSocket.
+
+---
+
+## Hasil Pengujian
+Pengujian sistem dilakukan dengan hasil sebagai berikut:
+1. ESP32 berhasil terhubung ke MQTT Broker
+2. Dashboard web berhasil menerima status perangkat dari ESP32
+3. Perintah ON/OFF dari dashboard berhasil mengontrol LED pada simulasi Wokwi
+4. Komunikasi data berjalan secara real-time melalui MQTT
+
+---
+
+## Catatan Implementasi
+Karena keterbatasan perangkat keras fisik, seluruh sistem diimplementasikan menggunakan **Wokwi ESP32 Simulator**. Meskipun demikian, konsep dan mekanisme IoT, komunikasi MQTT, serta dashboard web tetap berjalan sesuai dengan implementasi nyata.
+
+---
+
+## Kesimpulan
+Proyek ini berhasil mengimplementasikan sistem Smart Home berbasis IoT menggunakan MQTT sebagai protokol komunikasi. Sistem mampu melakukan monitoring dan kontrol perangkat secara real-time melalui dashboard web.
+
+---
+
+## Author
+- Ramzi Akbarsya Dihariyanto (2022071040)
+- Haykal Kamal Ilyasa (2022071072)
+- Muhammad Kamil Idris (2022071078)
 
