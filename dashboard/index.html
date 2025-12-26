@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Home Dashboard</title>
+
+  <!-- MQTT.js -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .on { background: #4CAF50; color: white; }
+    .off { background: #f44336; color: white; }
+    #statusLampu {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🏠 Smart Home Rumah Kos</h1>
+
+<div class="card">
+  <h3>Lampu Kamar 1</h3>
+  Status: <span id="statusLampu">-</span>
+</div>
+
+<div class="card">
+  <h3>Mesin Cuci</h3>
+  <button class="on" onclick="kontrol('rumah_kos/mesincuci/kontrol','ON')">ON</button>
+  <button class="off" onclick="kontrol('rumah_kos/mesincuci/kontrol','OFF')">OFF</button>
+</div>
+
+<div class="card">
+  <h3>Pompa Air</h3>
+  <button class="on" onclick="kontrol('rumah_kos/pompa/kontrol','ON')">ON</button>
+  <button class="off" onclick="kontrol('rumah_kos/pompa/kontrol','OFF')">OFF</button>
+</div>
+
+<script>
+  // Koneksi MQTT via WebSocket
+  const client = mqtt.connect("wss://broker.hivemq.com:8884/mqtt");
+
+  client.on("connect", () => {
+    console.log("Terhubung ke MQTT Broker");
+    client.subscribe("rumah_kos/kamar1/lampu/status");
+  });
+
+  client.on("message", (topic, message) => {
+    if (topic === "rumah_kos/kamar1/lampu/status") {
+      document.getElementById("statusLampu").innerText = message.toString();
+    }
+  });
+
+  function kontrol(topic, pesan) {
+    client.publish(topic, pesan);
+  }
+</script>
+
+</body>
+</html>
